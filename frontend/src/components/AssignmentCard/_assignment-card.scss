@@ -1,0 +1,97 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.assignment-card {
+  @include card-base;
+  padding: $spacing-md;
+  text-decoration: none;
+  color: inherit;
+  transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base;
+  display: block;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '→';
+    position: absolute;
+    bottom: $spacing-md;
+    right: $spacing-md;
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+    transition: transform $transition-base, color $transition-base;
+    opacity: 0;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+
+    &::after {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    .assignment-card__title {
+      color: $color-accent;
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $spacing-sm;
+    gap: $spacing-sm;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+    transition: color $transition-base;
+    line-height: 1.3;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    margin: 0 0 $spacing-xs;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &--easy {
+    border-left: 3px solid $color-easy;
+
+    &:hover {
+      border-left-color: $color-easy;
+      box-shadow: 0 12px 32px rgba($color-easy, 0.1);
+    }
+  }
+
+  &--medium {
+    border-left: 3px solid $color-medium;
+
+    &:hover {
+      border-left-color: $color-medium;
+      box-shadow: 0 12px 32px rgba($color-medium, 0.1);
+    }
+  }
+
+  &--hard {
+    border-left: 3px solid $color-hard;
+
+    &:hover {
+      border-left-color: $color-hard;
+      box-shadow: 0 12px 32px rgba($color-hard, 0.1);
+    }
+  }
+
+  @include respond-to('tablet') {
+    padding: $spacing-lg;
+  }
+}

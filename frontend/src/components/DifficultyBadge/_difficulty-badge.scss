@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+.difficulty-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &--easy {
+    background: rgba($color-easy, 0.15);
+    color: $color-easy;
+  }
+
+  &--medium {
+    background: rgba($color-medium, 0.15);
+    color: $color-medium;
+  }
+
+  &--hard {
+    background: rgba($color-hard, 0.15);
+    color: $color-hard;
+  }
+}

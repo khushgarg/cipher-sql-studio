@@ -1,0 +1,50 @@
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+
+  @include respond-to('tablet') {
+    padding: 0 $spacing-lg;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 (-$spacing-md / 2);
+}
+
+.col {
+  flex: 1;
+  padding: 0 ($spacing-md / 2);
+}
+
+.grid {
+  display: grid;
+  gap: $spacing-md;
+
+  @include respond-to('tablet') {
+    gap: $spacing-lg;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-sm { gap: $spacing-sm; }
+.gap-md { gap: $spacing-md; }
+.gap-lg { gap: $spacing-lg; }

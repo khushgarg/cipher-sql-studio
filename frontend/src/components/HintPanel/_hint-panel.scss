@@ -1,0 +1,114 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.hint-panel {
+  @include card-base;
+  animation: fadeIn 0.3s ease;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm $spacing-md;
+    border-bottom: 1px solid $color-border;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    color: $color-text;
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    &::before {
+      content: '💡';
+      font-size: 0.9rem;
+    }
+  }
+
+  &__count {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $border-radius-pill;
+    padding: 2px $spacing-sm;
+  }
+
+  &__action {
+    padding: $spacing-lg;
+    @include flex-center;
+  }
+
+  &__btn {
+    @include button-base;
+    font-size: $font-size-sm;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    &--secondary {
+      background: transparent;
+      border: 1px solid $color-accent;
+      color: $color-accent;
+      box-shadow: none;
+
+      &:hover {
+        background: rgba($color-accent, 0.1);
+        opacity: 1;
+      }
+    }
+  }
+
+  &__loading {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-lg;
+    color: $color-text-muted;
+    gap: $spacing-sm;
+  }
+
+  &__spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid $color-border;
+    border-top-color: $color-accent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__error {
+    padding: $spacing-md;
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-md;
+
+    p {
+      color: $color-hard;
+      margin: 0;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &__content {
+    padding: $spacing-md $spacing-lg;
+    animation: fadeIn 0.4s ease;
+  }
+
+  &__text {
+    color: $color-text;
+    line-height: 1.7;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-md;
+    background: rgba($color-accent, 0.04);
+    border-left: 3px solid $color-accent;
+    padding: $spacing-sm $spacing-md;
+    border-radius: 0 $border-radius-sm $border-radius-sm 0;
+  }
+}
+
+// Note: @keyframes spin is defined globally in main.scss

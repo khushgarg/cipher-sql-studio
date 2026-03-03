@@ -1,0 +1,75 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.attempt-page {
+  padding: $spacing-md;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: $spacing-lg;
+  }
+
+  &__back {
+    color: $color-accent;
+    text-decoration: none;
+    font-size: $font-size-sm;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+
+    @include respond-to('desktop') {
+      flex-direction: row;
+      gap: $spacing-lg;
+    }
+  }
+
+  &__left {
+    flex: 1;
+    min-width: 0;
+
+    @include respond-to('desktop') {
+      flex: 0 0 40%;
+    }
+  }
+
+  &__right {
+    flex: 1;
+    min-width: 0;
+
+    @include respond-to('desktop') {
+      flex: 0 0 60%;
+    }
+  }
+
+  &__loading,
+  &__error {
+    @include flex-center;
+    flex-direction: column;
+    min-height: 50vh;
+    color: $color-text-muted;
+  }
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $color-border;
+    border-top-color: $color-accent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: $spacing-md;
+  }
+
+  &__error {
+    color: $color-hard;
+  }
+}
+
+// Note: @keyframes spin is defined globally in main.scss

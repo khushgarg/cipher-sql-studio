@@ -1,0 +1,43 @@
+@mixin respond-to($bp) {
+  @if $bp == 'tablet' {
+    @media (min-width: 641px) { @content; }
+  }
+  @if $bp == 'desktop' {
+    @media (min-width: 1024px) { @content; }
+  }
+  @if $bp == 'wide' {
+    @media (min-width: 1281px) { @content; }
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-base {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+}
+
+@mixin button-base {
+  background: $color-accent;
+  color: $color-bg-dark;
+  border: none;
+  border-radius: 6px;
+  padding: $spacing-sm $spacing-md;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

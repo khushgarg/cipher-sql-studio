@@ -1,0 +1,157 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.results-panel {
+  @include card-base;
+  margin-bottom: $spacing-md;
+  min-height: 200px;
+  animation: fadeIn 0.3s ease;
+  transition: border-color $transition-base;
+
+  &--success {
+    border-color: rgba($color-success, 0.3);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm $spacing-md;
+    border-bottom: 1px solid $color-border;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    color: $color-text;
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__status {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    padding: 2px $spacing-sm;
+    border-radius: $border-radius-pill;
+
+    &--success {
+      background: rgba($color-success, 0.12);
+      color: $color-success;
+    }
+
+    &--error {
+      background: rgba($color-hard, 0.12);
+      color: $color-hard;
+    }
+  }
+
+  &__count {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: $border-radius-pill;
+    padding: 2px $spacing-sm;
+  }
+
+  &__time {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    font-family: $font-family-code;
+  }
+
+  &__loading,
+  &__empty {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-xl;
+    color: $color-text-muted;
+    min-height: 150px;
+    gap: $spacing-sm;
+  }
+
+  &__empty-icon {
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+
+  &__spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid $color-border;
+    border-top-color: $color-accent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__error {
+    padding: $spacing-md;
+  }
+
+  &__error-text {
+    background: rgba($color-hard, 0.08);
+    border: 1px solid rgba($color-hard, 0.2);
+    color: $color-hard;
+    padding: $spacing-md;
+    border-radius: $border-radius-base;
+    font-family: $font-family-code;
+    font-size: $font-size-sm;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  &__table {
+    width: 100%;
+    font-size: $font-size-xs;
+    font-family: $font-family-code;
+
+    th,
+    td {
+      padding: $spacing-xs $spacing-md;
+      text-align: left;
+      border-bottom: 1px solid rgba($color-border, 0.5);
+      white-space: nowrap;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      font-weight: 600;
+      color: $color-text;
+      position: sticky;
+      top: 0;
+      font-size: $font-size-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: $color-text-muted;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+      color: $color-text;
+    }
+  }
+
+  &__null {
+    color: rgba($color-text-muted, 0.5);
+    font-style: italic;
+    font-size: 0.8em;
+  }
+}
