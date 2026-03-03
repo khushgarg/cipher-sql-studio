@@ -8,6 +8,10 @@ const assignmentSchema = new mongoose.Schema({
   tables: [{ type: String }],
   expectedColumns: [{ type: String }],
   hints: [{ type: String }],
+  solutionQuery: { type: String, default: '' },
+  tags: [{ type: String }],
+  explanation: { type: String, default: '' },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);
+

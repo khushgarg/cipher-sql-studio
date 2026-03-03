@@ -9,6 +9,9 @@ const executeRouter = require('./routes/execute');
 const hintRouter = require('./routes/hint');
 const authRouter = require('./routes/auth');
 const attemptsRouter = require('./routes/attempts');
+const adminRouter = require('./routes/admin');
+const explainRouter = require('./routes/explain');
+const progressRouter = require('./routes/progress');
 
 const app = express();
 
@@ -20,6 +23,9 @@ app.use('/api/execute', executeRouter);
 app.use('/api/hint', hintRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/attempts', attemptsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/explain', explainRouter);
+app.use('/api/progress', progressRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

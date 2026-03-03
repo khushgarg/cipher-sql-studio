@@ -1,0 +1,393 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.admin-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: $spacing-xl $spacing-lg;
+    position: relative;
+
+    &__header {
+        margin-bottom: $spacing-xl;
+    }
+
+    &__title {
+        font-size: $font-size-xl;
+        font-weight: 700;
+        color: $color-text;
+        margin: 0 0 $spacing-xs;
+    }
+
+    &__subtitle {
+        color: $color-text-muted;
+        font-size: $font-size-sm;
+        margin: 0;
+    }
+}
+
+// Toast notification
+.admin-toast {
+    position: fixed;
+    top: 80px;
+    right: $spacing-lg;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $border-radius-base;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    z-index: 999;
+    animation: slide-in 0.25s ease;
+
+    @keyframes slide-in {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    &--success {
+        background: rgba($color-easy, 0.15);
+        border: 1px solid rgba($color-easy, 0.4);
+        color: $color-easy;
+    }
+
+    &--error {
+        background: rgba($color-hard, 0.15);
+        border: 1px solid rgba($color-hard, 0.4);
+        color: $color-hard;
+    }
+}
+
+// Tabs
+.admin-tabs {
+    display: flex;
+    gap: $spacing-xs;
+    border-bottom: 1px solid $color-border;
+    margin-bottom: $spacing-xl;
+
+    &__tab {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: $color-text-muted;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        font-family: $font-family;
+        padding: $spacing-sm $spacing-md;
+        cursor: pointer;
+        margin-bottom: -1px;
+        transition: color $transition-fast, border-color $transition-fast;
+
+        &:hover {
+            color: $color-text;
+        }
+
+        &.active {
+            color: $color-accent;
+            border-bottom-color: $color-accent;
+        }
+    }
+}
+
+// Questions list
+.admin-questions {
+
+    &__loading,
+    &__empty {
+        text-align: center;
+        padding: $spacing-2xl;
+        color: $color-text-muted;
+        font-size: $font-size-sm;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+    }
+}
+
+.admin-qcard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-base;
+    padding: $spacing-md $spacing-lg;
+    transition: border-color $transition-fast;
+
+    &:hover {
+        border-color: lighten($color-border, 10%);
+    }
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        flex-wrap: wrap;
+        flex: 1;
+    }
+
+    &__badge {
+        font-size: $font-size-xs;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: $border-radius-pill;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        &--easy {
+            background: rgba($color-easy, 0.15);
+            color: $color-easy;
+        }
+
+        &--medium {
+            background: rgba($color-medium, 0.15);
+            color: $color-medium;
+        }
+
+        &--hard {
+            background: rgba($color-hard, 0.15);
+            color: $color-hard;
+        }
+    }
+
+    &__title {
+        color: $color-text;
+        font-size: $font-size-sm;
+        font-weight: 500;
+    }
+
+    &__tags {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__tag {
+        background: $color-surface-raised;
+        color: $color-text-muted;
+        font-size: $font-size-xs;
+        padding: 2px 6px;
+        border-radius: $border-radius-sm;
+    }
+
+    &__delete {
+        background: transparent;
+        border: 1px solid rgba($color-hard, 0.3);
+        border-radius: $border-radius-base;
+        color: $color-hard;
+        font-size: $font-size-xs;
+        font-family: $font-family;
+        padding: 4px $spacing-sm;
+        cursor: pointer;
+        transition: background $transition-fast;
+        flex-shrink: 0;
+
+        &:hover {
+            background: rgba($color-hard, 0.1);
+        }
+    }
+}
+
+// Drop zone
+.admin-dropzone {
+    border: 2px dashed $color-border;
+    border-radius: $border-radius-lg;
+    padding: $spacing-2xl;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color $transition-fast, background $transition-fast;
+    margin-bottom: $spacing-xl;
+
+    &:hover,
+    &--over {
+        border-color: $color-accent;
+        background: $color-accent-glow;
+    }
+
+    &__icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: $spacing-md;
+    }
+
+    &__label {
+        color: $color-text;
+        font-weight: 500;
+        margin: 0 0 $spacing-xs;
+    }
+
+    &__hint {
+        color: $color-text-muted;
+        font-size: $font-size-sm;
+        margin: 0;
+    }
+
+    &__loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $spacing-md;
+        color: $color-text-muted;
+        font-size: $font-size-sm;
+    }
+}
+
+// Preview panel
+.admin-preview {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+
+    &__heading {
+        font-size: $font-size-lg;
+        font-weight: 600;
+        color: $color-text;
+        margin: 0 0 $spacing-xl;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-xs;
+        margin-bottom: $spacing-md;
+
+        label {
+            font-size: $font-size-sm;
+            font-weight: 500;
+            color: $color-text-muted;
+        }
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-md;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__input,
+    &__select {
+        background: $color-bg-dark;
+        border: 1px solid $color-border;
+        border-radius: $border-radius-base;
+        padding: $spacing-sm $spacing-md;
+        color: $color-text;
+        font-size: $font-size-sm;
+        font-family: $font-family;
+        transition: border-color $transition-fast;
+        outline: none;
+
+        &:focus {
+            border-color: $color-accent;
+        }
+    }
+
+    &__textarea {
+        background: $color-bg-dark;
+        border: 1px solid $color-border;
+        border-radius: $border-radius-base;
+        padding: $spacing-sm $spacing-md;
+        color: $color-text;
+        font-size: $font-size-sm;
+        font-family: $font-family;
+        transition: border-color $transition-fast;
+        outline: none;
+        resize: vertical;
+        min-height: 80px;
+        width: 100%;
+        box-sizing: border-box;
+
+        &:focus {
+            border-color: $color-accent;
+        }
+
+        &--code {
+            font-family: $font-family-code;
+            font-size: $font-size-xs;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $spacing-md;
+        margin-top: $spacing-xl;
+        padding-top: $spacing-lg;
+        border-top: 1px solid $color-border;
+    }
+
+    &__discard {
+        background: transparent;
+        border: 1px solid $color-border;
+        border-radius: $border-radius-base;
+        color: $color-text-muted;
+        font-family: $font-family;
+        font-size: $font-size-sm;
+        padding: $spacing-sm $spacing-lg;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $color-text-muted;
+            color: $color-text;
+        }
+    }
+
+    &__save {
+        background: $color-easy;
+        border: none;
+        border-radius: $border-radius-base;
+        color: #000;
+        font-family: $font-family;
+        font-size: $font-size-sm;
+        font-weight: 600;
+        padding: $spacing-sm $spacing-xl;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        transition: opacity $transition-fast;
+
+        &:hover:not(:disabled) {
+            opacity: 0.85;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Spinner
+.admin-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-top-color: $color-accent;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    margin: 0 auto;
+
+    &--sm {
+        width: 16px;
+        height: 16px;
+        border-top-color: #000;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}

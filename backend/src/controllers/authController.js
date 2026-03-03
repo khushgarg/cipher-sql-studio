@@ -28,9 +28,9 @@ const register = async (req, res) => {
     await user.save();
 
     // Use synchronous jwt.sign so errors are caught by the outer try/catch
-    const payload = { user: { id: user.id, username: user.username } };
+    const payload = { user: { id: user.id, username: user.username, role: user.role } };
     const token = jwt.sign(payload, JWT_SECRET, JWT_OPTS);
-    res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email } });
+    res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -55,9 +55,9 @@ const login = async (req, res) => {
     }
 
     // Use synchronous jwt.sign so errors are caught by the outer try/catch
-    const payload = { user: { id: user.id, username: user.username } };
+    const payload = { user: { id: user.id, username: user.username, role: user.role } };
     const token = jwt.sign(payload, JWT_SECRET, JWT_OPTS);
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

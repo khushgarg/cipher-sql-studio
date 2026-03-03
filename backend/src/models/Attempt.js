@@ -6,6 +6,9 @@ const attemptSchema = new mongoose.Schema({
   query: { type: String, required: true },
   executedAt: { type: Date, default: Date.now },
   wasSuccessful: { type: Boolean, default: false },
+  isCorrect: { type: Boolean, default: false },
+  timeTaken: { type: Number, default: 0 },   // milliseconds
+  hintsUsed: { type: Number, default: 0 },
   errorMessage: { type: String },
 }, { timestamps: true });
 

@@ -1,0 +1,35 @@
+.dashboard-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__coming {
+        text-align: center;
+        padding: 2rem;
+
+        h1 {
+            color: #c9d1d9;
+            margin: 1rem 0 0.5rem;
+        }
+
+        p {
+            color: #8b949e;
+        }
+    }
+
+    &__icon {
+        font-size: 3rem;
+    }
+
+    &__back {
+        display: inline-block;
+        margin-top: 1.5rem;
+        color: #58a6ff;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

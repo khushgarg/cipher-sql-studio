@@ -69,7 +69,8 @@
 
   &__links {
     display: flex;
-    gap: $spacing-lg;
+    align-items: center;
+    gap: $spacing-sm;
   }
 
   &__link {
@@ -80,10 +81,72 @@
     transition: color $transition-base;
     padding: $spacing-xs $spacing-sm;
     border-radius: $border-radius-sm;
+    white-space: nowrap;
 
     &:hover {
       color: $color-accent;
       background: $color-accent-glow;
+    }
+
+    &--admin {
+      color: $color-medium;
+
+      &:hover {
+        color: darken($color-medium, 10%);
+        background: rgba($color-medium, 0.1);
+      }
+    }
+  }
+
+  &__btn {
+    background: $color-accent;
+    color: #000;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $border-radius-pill;
+    transition: opacity $transition-fast, transform $transition-fast;
+    white-space: nowrap;
+
+    &:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-left: $spacing-xs;
+    padding-left: $spacing-sm;
+    border-left: 1px solid $color-border;
+  }
+
+  &__username {
+    font-size: $font-size-sm;
+    color: $color-text;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__logout {
+    background: transparent;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-base;
+    color: $color-text-muted;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    font-family: $font-family;
+    padding: 4px $spacing-sm;
+    cursor: pointer;
+    transition: border-color $transition-fast, color $transition-fast;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: $color-hard;
+      color: $color-hard;
     }
   }
 }

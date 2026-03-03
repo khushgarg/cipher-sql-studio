@@ -1,0 +1,215 @@
+# CipherSQL Studio — Data Flow Diagram (DFD)
+
+## Level 0 — Context Diagram
+
+> The entire system as a single process, showing external entities and top-level data flows.
+
+```mermaid
+flowchart LR
+    User(["👤 User (Browser)"])
+    OpenAI(["🤖 OpenAI / LLM API"])
+    MongoDB[("🍃 MongoDB")]
+    PostgreSQL[("🐘 PostgreSQL")]
+
+    User -- "HTTP Requests\n(login, register, run SQL, get hint,\nview assignments, save attempt)" --> System["⚙️ CipherSQL Studio\n(Express API)"]
+    System -- "JSON Responses\n(token, results, hints, assignments)" --> User
+    System -- "Read/Write Users,\nAssignments, Attempts" --> MongoDB
+    System -- "Execute SQL\n(schema-isolated)" --> PostgreSQL
+    System -- "Hint Prompt" --> OpenAI
+    OpenAI -- "AI Hint Text" --> System
+```
+
+---
+
+## Level 1 — System Decomposition
+
+> The system broken into its five core processes.
+
+```mermaid
+flowchart TD
+    User(["👤 User"])
+
+    subgraph Frontend["React Frontend"]
+        AP["📋 Assignments Page\nuseAssignments hook"]
+        ATE["🖊️ Attempt Page\nSQL Editor + Panels"]
+    end
+
+    subgraph Backend["Express Backend (port 5000)"]
+        P1["1️⃣ Auth\n/api/auth"]
+        P2["2️⃣ Assignments\n/api/assignments"]
+        P3["3️⃣ Execute SQL\n/api/execute"]
+        P4["4️⃣ Get Hint\n/api/hint"]
+        P5["5️⃣ Save/Get Attempts\n/api/attempts"]
+    end
+
+    DS1[("🍃 MongoDB\nUsers / Assignments / Attempts")]
+    DS2[("🐘 PostgreSQL\nSchema-isolated tables")]
+    DS3(["🤖 OpenAI API"])
+
+    User --> AP
+    AP -- "GET /assignments" --> P2
+    P2 -- assignment list --> AP
+    AP -- "navigate to /attempt/:id" --> ATE
+
+    ATE -- "GET /assignments/:id" --> P2
+    P2 -- assignment detail --> ATE
+
+    User -- "Register / Login" --> P1
+    P1 -- "JWT Token" --> User
+    P1 --> DS1
+
+    ATE -- "POST /execute\n{assignmentId, query}" --> P3
+    P3 --> DS2
+    DS2 -- "columns, rows, rowCount, executionTime" --> P3
+    P3 --> ATE
+
+    ATE -- "POST /hint\n{assignmentId, currentQuery, errorMessage}" --> P4
+    P4 -- "fetch Assignment from MongoDB" --> DS1
+    P4 -- "buildHintPrompt → LLM call" --> DS3
+    DS3 -- "hint text" --> P4
+    P4 --> ATE
+
+    ATE -- "POST /attempts\n{assignmentId, query, wasSuccessful}" --> P5
+    P5 --> DS1
+```
+
+---
+
+## Level 2 — Detailed Process Flows
+
+### 2.1 — Authentication Flow (`/api/auth`)
+
+```mermaid
+flowchart TD
+    U(["👤 User"])
+
+    U -- "POST /api/auth/register\n{username, email, password}" --> V1{"Validate\nFields"}
+    V1 -- "Missing fields / short password" --> E1["400 Error"]
+    V1 -- "Valid" --> C1{"User\nexists?"}
+    C1 -- "Yes" --> E2["400 User already exists"]
+    C1 -- "No" --> H["bcrypt.hash(password, 10)"]
+    H --> S["Save User to MongoDB\n{username, email, passwordHash}"]
+    S --> T["jwt.sign({id, username})\nexpires: 24h"]
+    T --> R1["201 {token, user{id,username,email}}"]
+
+    U -- "POST /api/auth/login\n{email, password}" --> F{"Find User\nby email"}
+    F -- "Not found" --> E3["400 Invalid credentials"]
+    F -- "Found" --> BC{"bcrypt.compare\n(password, hash)"}
+    BC -- "No match" --> E4["400 Invalid credentials"]
+    BC -- "Match" --> T2["jwt.sign({id, username})"]
+    T2 --> R2["200 {token, user}"]
+
+    U -- "GET /api/auth/me\n[x-auth-token header]" --> MW["Auth Middleware\njwt.verify(token)"]
+    MW -- "Invalid token" --> E5["401 Token not valid"]
+    MW -- "Valid" --> DB["User.findById(id)\n.select('-passwordHash')"]
+    DB --> R3["200 User object"]
+```
+
+---
+
+### 2.2 — SQL Execution Flow (`/api/execute`)
+
+```mermaid
+flowchart TD
+    U(["👤 User"])
+
+    U -- "POST /api/execute\n{assignmentId, query}" --> QV["queryValidator Middleware\nsanitizeQuery(query)"]
+    QV -- "No query / dangerous SQL" --> E1["400 Error"]
+    QV -- "sanitizedQuery attached to req" --> C["executeController"]
+
+    C -- "Assignment.findById(assignmentId)" --> MDB[("MongoDB")]
+    MDB -- "assignment.postgresSchema" --> SV{"Schema Name\nSafe? /^[a-zA-Z_][a-zA-Z0-9_]*$/"}
+    SV -- "Invalid" --> E2["500 Invalid schema configuration"]
+    SV -- "Valid" --> PG["pool.connect()\nfrom PostgreSQL pool"]
+
+    PG --> SP["SET search_path TO schema\nSET statement_timeout = 5000"]
+    SP --> EX["client.query(sanitizedQuery)"]
+    EX -- "Timeout > 5s" --> E3["400 Query timed out"]
+    EX -- "SQL Error" --> E4["400 error.message"]
+    EX -- "Success" --> R["200 {columns, rows, rowCount, executionTime}"]
+    R --> U
+```
+
+---
+
+### 2.3 — AI Hint Flow (`/api/hint`)
+
+```mermaid
+flowchart TD
+    U(["👤 User"])
+
+    U -- "POST /api/hint\n{assignmentId, currentQuery, errorMessage}" --> HC["hintController"]
+    HC -- "Assignment.findById(id)" --> MDB[("MongoDB")]
+    MDB -- "assignment data" --> HC
+    HC --> PB["buildHintPrompt(\n  assignment,\n  currentQuery,\n  errorMessage\n)"]
+    PB --> OAI["openai.chat.completions.create\nmodel: gpt-4o-mini\nmax_tokens: 150"]
+    OAI -- "hint text" --> R["200 {hint}"]
+    OAI -- "API error" --> E["500 Failed to get hint"]
+    R --> U
+```
+
+---
+
+### 2.4 — Assignments Flow (`/api/assignments`)
+
+```mermaid
+flowchart TD
+    U(["👤 User"])
+
+    U -- "GET /api/assignments" --> AC["assignmentController\ngetAllAssignments"]
+    AC -- "Assignment.find()\n.select(title, description, difficulty, createdAt)" --> MDB[("MongoDB")]
+    MDB --> R1["200 [ assignments ]"]
+    R1 --> U
+
+    U -- "GET /api/assignments/:id" --> AC2["assignmentController\ngetAssignmentById"]
+    AC2 -- "Assignment.findById(id)" --> MDB
+    MDB -- "null" --> E["404 Assignment not found"]
+    MDB -- "document" --> R2["200 assignment object"]
+    R2 --> U
+```
+
+---
+
+### 2.5 — Attempts Flow (`/api/attempts`)
+
+```mermaid
+flowchart TD
+    U(["👤 User"])
+
+    U -- "POST /api/attempts\n{assignmentId, query, wasSuccessful, errorMessage}" --> MW["Auth Middleware\n(optional — userId nullable)"]
+    MW --> SA["attemptController\nsaveAttempt"]
+    SA -- "new Attempt({userId, assignmentId,\nquery, wasSuccessful, errorMessage})" --> MDB[("MongoDB")]
+    MDB --> R1["201 attempt object"]
+    R1 --> U
+
+    U -- "GET /api/attempts/:userId\n[x-auth-token]" --> MW2["Auth Middleware\njwt.verify(token)"]
+    MW2 -- "Invalid token" --> E1["401 Unauthorized"]
+    MW2 --> AZ{"req.user.id\n=== userId?"}
+    AZ -- "No" --> E2["403 Access denied"]
+    AZ -- "Yes" --> GA["Attempt.find({userId})\n.populate('assignmentId')\n.sort(executedAt: -1).limit(100)"]
+    GA --> R2["200 [ attempts ]"]
+    R2 --> U
+```
+
+---
+
+## Data Stores Reference
+
+| Store | Technology | Collections / Schemas | Key Fields |
+|---|---|---|---|
+| `Users` | MongoDB | `users` | `username`, `email`, `passwordHash`, `createdAt` |
+| [Assignments](file:///d:/cipher-sql-studio/frontend/src/services/api.js#12-13) | MongoDB | `assignments` | `title`, `description`, `difficulty`, `postgresSchema`, `tables`, `expectedColumns`, `hints` |
+| [Attempts](file:///d:/cipher-sql-studio/backend/src/controllers/attemptController.js#28-46) | MongoDB | `attempts` | `userId` (ref User), `assignmentId` (ref Assignment), [query](file:///d:/cipher-sql-studio/backend/src/middleware/queryValidator.js#3-15), `wasSuccessful`, `errorMessage`, `executedAt` |
+| SQL Practice Data | PostgreSQL | Per-assignment schemas (e.g. `ecommerce`, `library`) | Domain tables isolated per assignment via `search_path` |
+
+---
+
+## Frontend Component → API Mapping
+
+| Frontend Component | Hook Used | API Called | Data Flowing |
+|---|---|---|---|
+| [AssignmentsPage](file:///d:/cipher-sql-studio/frontend/src/pages/AssignmentsPage.jsx#8-117) | `useAssignments` | `GET /api/assignments` | Assignment list (title, difficulty) |
+| [AttemptPage](file:///d:/cipher-sql-studio/frontend/src/pages/AttemptPage.jsx#13-99) | direct [getAssignmentById](file:///d:/cipher-sql-studio/backend/src/controllers/assignmentController.js#12-23) | `GET /api/assignments/:id` | Full assignment (description, tables, hints) |
+| `SQLEditor` + `ResultsPanel` | `useQueryExecution` | `POST /api/execute` | Query in → columns/rows/executionTime out |
+| `HintPanel` | `useHint` | `POST /api/hint` | assignmentId+query+error → hint text |
+| (implicit via hooks) | — | `POST /api/attempts` | Query attempt saved to MongoDB |
