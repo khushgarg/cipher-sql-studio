@@ -154,4 +154,83 @@
     font-style: italic;
     font-size: 0.8em;
   }
+
+  // Correct / Incorrect states
+  &--correct {
+    border-color: rgba($color-success, 0.3);
+  }
+
+  &--incorrect {
+    border-color: rgba($color-medium, 0.3);
+  }
+
+  &__status {
+    &--correct {
+      background: rgba($color-success, 0.12);
+      color: $color-success;
+    }
+
+    &--incorrect {
+      background: rgba($color-medium, 0.12);
+      color: $color-medium;
+    }
+  }
+
+  &__banner {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+
+    &--correct {
+      background: rgba($color-success, 0.08);
+      color: $color-success;
+      border-bottom: 1px solid rgba($color-success, 0.15);
+    }
+
+    &--incorrect {
+      background: rgba($color-medium, 0.08);
+      color: $color-medium;
+      border-bottom: 1px solid rgba($color-medium, 0.15);
+    }
+  }
+
+  &__toggle-expected {
+    background: transparent;
+    border: 1px solid rgba($color-medium, 0.3);
+    color: $color-medium;
+    padding: 2px $spacing-sm;
+    border-radius: $border-radius-pill;
+    cursor: pointer;
+    font-size: $font-size-xs;
+    font-weight: 600;
+    transition: all $transition-base;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba($color-medium, 0.1);
+    }
+  }
+
+  &__expected {
+    border-top: 1px solid $color-border;
+    padding-top: $spacing-sm;
+
+    h4 {
+      padding: $spacing-xs $spacing-md;
+      font-size: $font-size-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $color-text-muted;
+    }
+  }
+
+  &__table--expected {
+    th {
+      background: rgba($color-success, 0.06);
+    }
+  }
 }

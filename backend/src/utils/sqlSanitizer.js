@@ -10,7 +10,8 @@ function sanitizeQuery(query) {
     throw new Error('Query must be a non-empty string');
   }
 
-  const trimmedQuery = query.trim();
+  // Strip block comments /* ... */ and line comments -- to prevent regex keyword bypass
+  let trimmedQuery = query.replace(/\/\*[\s\S]*?\*\//g, '').replace(/--.*$/gm, '').trim();
 
   if (!trimmedQuery.toUpperCase().startsWith('SELECT')) {
     throw new Error('Only SELECT queries are allowed. Your query must start with SELECT.');

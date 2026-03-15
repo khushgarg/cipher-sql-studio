@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './_results-panel.scss';
 
 const ResultsPanel = ({ results, error, loading }) => {
+  const [showExpected, setShowExpected] = useState(false);
+
   if (loading) {
     return (
       <div className="results-panel">
@@ -45,11 +47,15 @@ const ResultsPanel = ({ results, error, loading }) => {
   }
 
   return (
-    <div className="results-panel results-panel--success">
+    <div className={`results-panel ${results.isCorrect ? 'results-panel--correct' : 'results-panel--incorrect'}`}>
       <div className="results-panel__header">
         <h3 className="results-panel__title">Results</h3>
         <div className="results-panel__meta">
-          <span className="results-panel__status results-panel__status--success">✓ Success</span>
+          {results.isCorrect ? (
+            <span className="results-panel__status results-panel__status--correct">✓ Correct!</span>
+          ) : (
+            <span className="results-panel__status results-panel__status--incorrect">✗ Incorrect</span>
+          )}
           <span className="results-panel__count">
             {results.rowCount} row{results.rowCount !== 1 ? 's' : ''}
           </span>
@@ -58,6 +64,27 @@ const ResultsPanel = ({ results, error, loading }) => {
           )}
         </div>
       </div>
+
+      {/* Correctness feedback banner */}
+      {results.isCorrect ? (
+        <div className="results-panel__banner results-panel__banner--correct">
+          🎉 Great job! Your query produces the correct result.
+        </div>
+      ) : (
+        <div className="results-panel__banner results-panel__banner--incorrect">
+          Not quite right. Compare your output with the expected result and try again!
+          {results.solutionRows && (
+            <button
+              className="results-panel__toggle-expected"
+              onClick={() => setShowExpected(!showExpected)}
+            >
+              {showExpected ? 'Hide' : 'View'} Expected Output
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* User's result table */}
       <div className="results-panel__table-wrapper">
         <table className="results-panel__table">
           <thead>
@@ -70,7 +97,6 @@ const ResultsPanel = ({ results, error, loading }) => {
           <tbody>
             {results.rows.map((row, rowIdx) => (
               <tr key={rowIdx}>
-                {/* row is an array (already extracted by server) */}
                 {row.map((cell, cellIdx) => (
                   <td key={cellIdx}>{cell !== null && cell !== undefined ? String(cell) : <span className="results-panel__null">NULL</span>}</td>
                 ))}
@@ -79,6 +105,33 @@ const ResultsPanel = ({ results, error, loading }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Expected output table (toggleable) */}
+      {showExpected && results.solutionRows && results.solutionColumns && (
+        <div className="results-panel__expected">
+          <h4>Expected Output</h4>
+          <div className="results-panel__table-wrapper">
+            <table className="results-panel__table results-panel__table--expected">
+              <thead>
+                <tr>
+                  {results.solutionColumns.map((col, idx) => (
+                    <th key={idx}>{col}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {results.solutionRows.map((row, rowIdx) => (
+                  <tr key={rowIdx}>
+                    {row.map((cell, cellIdx) => (
+                      <td key={cellIdx}>{cell !== null && cell !== undefined ? String(cell) : <span className="results-panel__null">NULL</span>}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

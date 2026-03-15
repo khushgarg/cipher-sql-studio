@@ -2,7 +2,7 @@ const Assignment = require('../models/Assignment');
 
 const getAllAssignments = async (req, res) => {
   try {
-    const assignments = await Assignment.find().select('title description difficulty createdAt');
+    const assignments = await Assignment.find().select('title description difficulty tags createdAt');
     res.json(assignments);
   } catch (error) {
     res.status(500).json({ error: error.message });

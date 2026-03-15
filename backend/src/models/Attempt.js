@@ -12,4 +12,8 @@ const attemptSchema = new mongoose.Schema({
   errorMessage: { type: String },
 }, { timestamps: true });
 
+// Indexes to speed up progressController and leaderboard aggregations
+attemptSchema.index({ userId: 1, isCorrect: 1 });
+attemptSchema.index({ userId: 1, assignmentId: 1 });
+
 module.exports = mongoose.model('Attempt', attemptSchema);

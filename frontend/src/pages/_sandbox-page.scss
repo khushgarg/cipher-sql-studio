@@ -1,0 +1,337 @@
+@import '../styles/variables.scss';
+@import '../styles/mixins';
+
+.sandbox-page {
+    display: flex;
+    min-height: calc(100vh - 60px);
+
+    // ── Sidebar ──────────────────────────────────────────────────────
+    &__sidebar {
+        width: 280px;
+        flex-shrink: 0;
+        background: $color-surface;
+        border-right: 1px solid $color-border;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
+
+    &__sidebar-header {
+        padding: $spacing-md;
+        border-bottom: 1px solid $color-border;
+
+        h2 {
+            font-size: $font-size-md;
+            color: $color-text;
+            margin: 0;
+        }
+    }
+
+    &__sidebar-loading {
+        padding: $spacing-lg;
+        color: $color-text-muted;
+        text-align: center;
+    }
+
+    &__schema-select {
+        padding: $spacing-md;
+        border-bottom: 1px solid $color-border;
+
+        label {
+            display: block;
+            font-size: $font-size-xs;
+            color: $color-text-muted;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: $spacing-xs;
+        }
+
+        select {
+            width: 100%;
+            background: $color-bg-dark;
+            border: 1px solid $color-border;
+            border-radius: $border-radius-base;
+            color: $color-text;
+            padding: $spacing-xs $spacing-sm;
+            font-size: $font-size-sm;
+
+            &:focus {
+                outline: none;
+                border-color: $color-accent;
+            }
+        }
+    }
+
+    &__tables {
+        padding: $spacing-sm;
+        flex: 1;
+    }
+
+    &__table-name {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: $color-text;
+        padding: $spacing-xs $spacing-sm;
+        font-size: $font-size-sm;
+        cursor: pointer;
+        border-radius: $border-radius-base;
+        text-align: left;
+        transition: background $transition-base;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.expanded {
+            color: $color-accent;
+        }
+    }
+
+    &__table-icon {
+        font-size: 0.7rem;
+        width: 12px;
+    }
+
+    &__col-count {
+        margin-left: auto;
+        font-size: $font-size-xs;
+        color: $color-text-muted;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1px 6px;
+        border-radius: $border-radius-pill;
+    }
+
+    &__columns {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 $spacing-sm $spacing-lg;
+    }
+
+    &__column {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px $spacing-sm;
+        font-size: $font-size-xs;
+    }
+
+    &__col-name {
+        color: $color-text;
+        font-family: $font-family-code;
+    }
+
+    &__col-type {
+        color: $color-text-muted;
+        font-family: $font-family-code;
+        font-size: 0.7rem;
+    }
+
+    // ── Main ─────────────────────────────────────────────────────────
+    &__main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-lg;
+        gap: $spacing-md;
+    }
+
+    &__hero {
+        h1 {
+            font-size: 2rem;
+            color: $color-text;
+            margin: 0 0 $spacing-xs;
+        }
+
+        p {
+            color: $color-text-muted;
+            margin: 0;
+        }
+    }
+
+    &__hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: white;
+        font-size: $font-size-xs;
+        padding: 2px $spacing-sm;
+        border-radius: $border-radius-pill;
+        vertical-align: middle;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-left: $spacing-xs;
+    }
+
+    // ── Editor ───────────────────────────────────────────────────────
+    &__editor {
+        background: $color-surface;
+        border: 1px solid $color-border;
+        border-radius: $border-radius-lg;
+        overflow: hidden;
+    }
+
+    &__editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $spacing-sm $spacing-md;
+        border-bottom: 1px solid $color-border;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    &__editor-schema {
+        font-size: $font-size-sm;
+        color: $color-text-muted;
+
+        strong {
+            color: $color-accent;
+        }
+    }
+
+    &__editor-actions {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+    }
+
+    &__shortcut {
+        font-size: $font-size-xs;
+        color: $color-text-muted;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px $spacing-sm;
+        border-radius: $border-radius-pill;
+    }
+
+    &__run-btn {
+        padding: $spacing-xs $spacing-lg;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        border: none;
+        border-radius: $border-radius-base;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: $font-size-sm;
+        transition: all $transition-base;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    // ── Results ──────────────────────────────────────────────────────
+    &__results {
+        background: $color-surface;
+        border: 1px solid $color-border;
+        border-radius: $border-radius-lg;
+        overflow: hidden;
+        flex: 1;
+    }
+
+    &__results-loading {
+        @include flex-center;
+        flex-direction: column;
+        padding: $spacing-xl;
+        color: $color-text-muted;
+        gap: $spacing-sm;
+    }
+
+    &__spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid $color-border;
+        border-top-color: $color-accent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    &__results-error {
+        padding: $spacing-md;
+        color: $color-hard;
+        background: rgba($color-hard, 0.06);
+        font-size: $font-size-sm;
+        font-family: $font-family-code;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    &__results-meta {
+        display: flex;
+        gap: $spacing-md;
+        padding: $spacing-sm $spacing-md;
+        border-bottom: 1px solid $color-border;
+        font-size: $font-size-xs;
+        color: $color-success;
+        background: rgba($color-success, 0.04);
+    }
+
+    &__results-table {
+        overflow: auto;
+        max-height: 400px;
+
+        table {
+            width: 100%;
+            font-size: $font-size-xs;
+            font-family: $font-family-code;
+            border-collapse: collapse;
+
+            th,
+            td {
+                padding: $spacing-xs $spacing-md;
+                text-align: left;
+                border-bottom: 1px solid rgba($color-border, 0.5);
+                white-space: nowrap;
+            }
+
+            th {
+                background: rgba(255, 255, 255, 0.04);
+                color: $color-text;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                position: sticky;
+                top: 0;
+            }
+
+            td {
+                color: $color-text-muted;
+            }
+
+            tr:hover td {
+                background: rgba(255, 255, 255, 0.03);
+                color: $color-text;
+            }
+        }
+    }
+
+    &__results-empty {
+        @include flex-center;
+        flex-direction: column;
+        padding: $spacing-2xl;
+        color: $color-text-muted;
+        gap: $spacing-sm;
+
+        span {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+    }
+
+    &__null {
+        color: rgba($color-text-muted, 0.5);
+        font-style: italic;
+    }
+}

@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
 import DashboardPage from './pages/DashboardPage';
+import SandboxPage from './pages/SandboxPage';
 import './styles/main.scss';
 
 const App = () => {
@@ -32,6 +33,9 @@ const App = () => {
               } />
               <Route path="/dashboard" element={
                 <ProtectedRoute><DashboardPage /></ProtectedRoute>
+              } />
+              <Route path="/sandbox" element={
+                <ProtectedRoute><SandboxPage /></ProtectedRoute>
               } />
 
               {/* Protected: admin only */}

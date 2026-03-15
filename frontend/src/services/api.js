@@ -49,5 +49,9 @@ export const explainQuery = (assignmentId, userQuery) =>
 export const getMyProgress = () => api.get('/progress/me');
 export const getLeaderboard = () => api.get('/progress/leaderboard');
 
-export default api;
+// ─── Sandbox ─────────────────────────────────────────────────────────────────────
+export const getSandboxSchemas = () => api.get('/sandbox/schemas');
+export const executeSandboxQuery = (schema, query) =>
+  api.post('/sandbox/execute', { schema, query });
 
+export default api;

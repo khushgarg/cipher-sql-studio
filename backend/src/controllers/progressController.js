@@ -1,5 +1,6 @@
 const Attempt = require('../models/Attempt');
 const Assignment = require('../models/Assignment');
+const User = require('../models/User');
 
 /**
  * GET /api/progress/me
@@ -38,11 +39,16 @@ const getMyProgress = async (req, res) => {
                 solvedAt: a.executedAt,
             }));
 
+        const userObj = await User.findById(userId).select('streakCount longestStreak lastActiveDate');
+
         res.json({
             totalSolved: solvedSet.size,
             totalAttempts,
             byDifficulty: solvedByDifficulty,
             recentSolved: recent,
+            streakCount: userObj?.streakCount || 0,
+            longestStreak: userObj?.longestStreak || 0,
+            lastActiveDate: userObj?.lastActiveDate || null
         });
     } catch (err) {
         res.status(500).json({ error: err.message });

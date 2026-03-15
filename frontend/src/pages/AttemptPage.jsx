@@ -3,11 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { getAssignmentById } from '../services/api';
 import useQueryExecution from '../hooks/useQueryExecution';
 import useHint from '../hooks/useHint';
+import useExplain from '../hooks/useExplain';
 import QuestionPanel from '../components/QuestionPanel/QuestionPanel';
 import SampleDataViewer from '../components/SampleDataViewer/SampleDataViewer';
 import SQLEditor from '../components/SQLEditor/SQLEditor';
 import ResultsPanel from '../components/ResultsPanel/ResultsPanel';
 import HintPanel from '../components/HintPanel/HintPanel';
+import SolutionPanel from '../components/SolutionPanel/SolutionPanel';
 import './_attempt-page.scss';
 
 const AttemptPage = () => {
@@ -19,6 +21,7 @@ const AttemptPage = () => {
 
   const { loading: executing, results, error: resultError, execute, clearResults } = useQueryExecution();
   const { loading: hintLoading, hint, error: hintError, fetchHint, hintCount, clearHint } = useHint();
+  const { loading: explainLoading, data: explainData, error: explainError, fetchExplanation } = useExplain();
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -40,6 +43,10 @@ const AttemptPage = () => {
 
   const handleGetHint = () => {
     fetchHint(id, query, resultError || '');
+  };
+
+  const handleExplain = () => {
+    fetchExplanation(id, query);
   };
 
   if (loading) {
@@ -73,23 +80,30 @@ const AttemptPage = () => {
         </div>
 
         <div className="attempt-page__right">
-          <SQLEditor 
-            value={query} 
+          <SQLEditor
+            value={query}
             onChange={setQuery}
             onRun={handleRunQuery}
             loading={executing}
           />
-          <ResultsPanel 
+          <ResultsPanel
             results={results}
             error={resultError}
             loading={executing}
           />
-          <HintPanel 
+          <HintPanel
             hint={hint}
             error={hintError}
             loading={hintLoading}
             hintCount={hintCount}
             onGetHint={handleGetHint}
+          />
+          <SolutionPanel
+            data={explainData}
+            error={explainError}
+            loading={explainLoading}
+            onExplain={handleExplain}
+            hasQueried={!!results || !!resultError}
           />
         </div>
       </div>
@@ -98,3 +112,4 @@ const AttemptPage = () => {
 };
 
 export default AttemptPage;
+

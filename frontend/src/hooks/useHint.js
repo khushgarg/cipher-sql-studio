@@ -16,7 +16,8 @@ export const useHint = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getHint(assignmentId, currentQuery, errorMessage);
+      const nextLevel = hintCount + 1;
+      const response = await getHint(assignmentId, currentQuery, errorMessage, nextLevel);
       setHint(response.data.hint);
       setHintCount(prev => prev + 1);
     } catch (err) {

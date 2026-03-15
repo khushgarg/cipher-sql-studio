@@ -121,16 +121,84 @@
     background: $color-border;
   }
 
-  // ── Controls ────────────────────────────────────────────────────
-  &__controls {
+  // ── Layout ──────────────────────────────────────────────────────
+  &__layout {
+    display: flex;
+    gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    padding: $spacing-lg $spacing-md;
+    padding: 0 $spacing-md $spacing-2xl;
+    align-items: flex-start;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  &__sidebar {
+    width: 250px;
+    flex-shrink: 0;
+
+    h3 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $color-text-muted;
+      margin-bottom: $spacing-md;
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  &__collections {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    @media (max-width: 768px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__collection-btn {
+    text-align: left;
+    padding: $spacing-sm $spacing-md;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: $border-radius-pill;
+    color: $color-text;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+      background: rgba($color-accent, 0.1);
+      border-color: rgba($color-accent, 0.3);
+      color: $color-accent;
+      font-weight: 600;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // ── Controls ────────────────────────────────────────────────────
+  &__controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: $spacing-md;
+    margin-bottom: $spacing-lg;
   }
 
   &__filters {
@@ -188,9 +256,6 @@
     display: grid;
     gap: $spacing-md;
     grid-template-columns: 1fr;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 $spacing-md $spacing-2xl;
 
     @include respond-to('tablet') {
       grid-template-columns: repeat(2, 1fr);

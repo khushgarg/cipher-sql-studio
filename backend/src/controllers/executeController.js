@@ -1,6 +1,7 @@
 const pool = require('../config/postgres');
 const Assignment = require('../models/Assignment');
 const Attempt = require('../models/Attempt');
+const User = require('../models/User');
 
 const SAFE_SCHEMA_RE = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
@@ -76,7 +77,43 @@ const executeQuery = async (req, res) => {
           timeTaken: executionTime,
           hintsUsed: Number(hintsUsed) || 0,
         }).save();
-      } catch { /* non-blocking */ }
+
+        if (isCorrect) {
+          // Update User Streak Logic
+          const userObj = await User.findById(req.user.id);
+          if (userObj) {
+            const now = new Date();
+            const lastActive = userObj.lastActiveDate;
+
+            if (!lastActive) {
+              // First correct submission ever
+              userObj.streakCount = 1;
+              userObj.longestStreak = 1;
+              userObj.lastActiveDate = now;
+            } else {
+              // Check time difference in UTC days
+              const lastActiveUTC = Date.UTC(lastActive.getFullYear(), lastActive.getMonth(), lastActive.getDate());
+              const nowUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+              const dayDiff = Math.floor((nowUTC - lastActiveUTC) / (1000 * 60 * 60 * 24));
+
+              if (dayDiff === 1) {
+                // Streak continues!
+                userObj.streakCount += 1;
+                if (userObj.streakCount > userObj.longestStreak) {
+                  userObj.longestStreak = userObj.streakCount;
+                }
+                userObj.lastActiveDate = now;
+              } else if (dayDiff > 1) {
+                // Streak broken
+                userObj.streakCount = 1;
+                userObj.lastActiveDate = now;
+              }
+              // If dayDiff === 0, they already solved one today, don't increment streak but do nothing.
+            }
+            await userObj.save();
+          }
+        }
+      } catch (err) { console.error("Error saving attempt or streak:", err); }
     }
 
     res.json({
